@@ -10,7 +10,7 @@ export default function App() {
 		</View>
 	);
 }
-//goIT React Native HW app!
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
