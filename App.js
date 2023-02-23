@@ -1,11 +1,11 @@
+import LoginScreen from "./Screens/LoginScreen/LoginScreen.jsx";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function App() {
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>GoIT React Native HW app!</Text>
+			<LoginScreen />
 			<StatusBar style="light" />
 		</View>
 	);
@@ -14,14 +14,5 @@ export default function App() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#537FE7",
-		fontWeight: "bold",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	title: {
-		fontSize: 25,
-		fontWeight: "bold",
-		color: "#fff",
 	},
 });
