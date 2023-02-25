@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import RegistrationScreen from "Screens/RegistrationScreen/RegistrationScreen.jsx";
+import RegistrationScreen from "./Screens/RegistrationScreen/RegistrationScreen.jsx";
 import LoginScreen from "./Screens/LoginScreen/LoginScreen.jsx";
 
 const MainStack = createStackNavigator();
