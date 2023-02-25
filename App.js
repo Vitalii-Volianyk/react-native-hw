@@ -1,18 +1,23 @@
-import LoginScreen from "./Screens/LoginScreen/LoginScreen.jsx";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import RegistrationScreen from "Screens/RegistrationScreen/RegistrationScreen.jsx";
+import LoginScreen from "./Screens/LoginScreen/LoginScreen.jsx";
 
+const MainStack = createStackNavigator();
 export default function App() {
 	return (
-		<View style={styles.container}>
-			<LoginScreen />
+		<>
 			<StatusBar style="light" />
-		</View>
+			<NavigationContainer>
+				<MainStack.Navigator initialRouteName="Login">
+					<MainStack.Screen
+						name="Registration"
+						component={RegistrationScreen}
+					/>
+					<MainStack.Screen name="Login" component={LoginScreen} />
+				</MainStack.Navigator>
+			</NavigationContainer>
+		</>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-});

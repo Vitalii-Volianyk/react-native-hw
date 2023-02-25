@@ -4,10 +4,8 @@ import {
 	Keyboard,
 	StyleSheet,
 	ImageBackground,
-	View,
 	TouchableWithoutFeedback,
-	KeyboardAvoidingView,
-	Platform,
+	View,
 } from "react-native";
 
 const FormContainer = ({ children }) => {
@@ -35,25 +33,21 @@ const FormContainer = ({ children }) => {
 				bottom: offset,
 			}}
 		>
-			<View style={styles.container}>{children}</View>
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+				<View style={styles.container}>{children}</View>
+			</TouchableWithoutFeedback>
 		</ImageBackground>
 	);
 };
 const styles = StyleSheet.create({
 	container: {
-		width: "100",
-		flexDirection: "column",
-		justifyContent: "flex-start",
-		alignItems: "center",
-		backgroundColor: "#fff",
-		borderRadius: 25,
-		padding: 20,
+		justifyContent: "flex-end",
+		flex: 1,
 	},
 	image: {
 		flex: 1,
 		resizeMode: "stretch",
-		justifyContent: "flex-end",
-		alignItems: "center",
+		padding: 0,
 	},
 });
 
