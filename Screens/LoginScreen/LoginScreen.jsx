@@ -6,18 +6,18 @@ import {
 	Platform,
 	View,
 	Button,
+	Image,
 } from "react-native";
 import FormContainer from "../../components/FormContainer/FormContainer";
-import { useState } from "react";
 
-const LoginScreen = () => {
+
+const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
 	return (
 		<FormContainer>
-			<View style={styles.container}>
-				<View style={styles.thumb} />
+			
 				<Text>Login Screen</Text>
 				<KeyboardAvoidingView
 					behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -36,13 +36,14 @@ const LoginScreen = () => {
 						placeholder="Password"
 					/>
 				</KeyboardAvoidingView>
+
+				<Button
+					title="Увійти"
+					onPress={() => console.log({ email, password })}
+				/>
 				<Button
 					title="Немає аккаунту?Зареєструватися"
 					onPress={() => navigation.navigate("Registration")}
-				/>
-				<Button
-					title="Увійти"
-					onPress={console.log({ email, password })}
 				/>
 			</View>
 		</FormContainer>
