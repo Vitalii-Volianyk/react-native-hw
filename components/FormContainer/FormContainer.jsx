@@ -1,53 +1,44 @@
-import { useEffect, useState } from "react";
 import {
-	Dimensions,
-	Keyboard,
 	StyleSheet,
 	ImageBackground,
 	TouchableWithoutFeedback,
+	KeyboardAvoidingView,
+	Platform,
 	View,
+	Keyboard,
 } from "react-native";
 
-const FormContainer = ({ children }) => {
-	const [offset, setOffset] = useState(Dimensions.get("window").height - 812);
-	useEffect(() => {
-		const showSubscription = Keyboard.addListener("keyboardDidShow", e => {
-			setOffset(
-				Dimensions.get("window").height - 812 - e.endCoordinates.height
-			);
-		});
-		const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-			setOffset(Dimensions.get("window").height - 812);
-		});
-
-		return () => {
-			showSubscription.remove();
-			hideSubscription.remove();
-		};
-	}, []);
+const FormContainer = ({ children, route }) => {
 	return (
-		<ImageBackground
-			source={require("../../assets/PhotoBG.jpg")}
-			style={styles.image}
-			imageStyle={{
-				bottom: offset,
-			}}
-		>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<View style={styles.container}>{children}</View>
-			</TouchableWithoutFeedback>
-		</ImageBackground>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS == "ios" ? "padding" : "height"}
+				keyboardVerticalOffset={Platform.select({
+					ios: () => -290,
+					android: () => (route === "login" ? -250 : -190),
+				})()}
+				style={styles.block}
+			>
+				<View style={styles.block}>
+					<ImageBackground
+						source={require("../../assets/PhotoBG.jpg")}
+						style={styles.image}
+					>
+						{children}
+					</ImageBackground>
+				</View>
+			</KeyboardAvoidingView>
+		</TouchableWithoutFeedback>
 	);
 };
 const styles = StyleSheet.create({
-	container: {
-		justifyContent: "flex-end",
+	block: {
 		flex: 1,
 	},
 	image: {
 		flex: 1,
 		resizeMode: "stretch",
-		padding: 0,
+		justifyContent: "flex-end",
 	},
 });
 

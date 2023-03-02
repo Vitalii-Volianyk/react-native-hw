@@ -1,24 +1,29 @@
 import {
 	TextInput,
 	Text,
-	KeyboardAvoidingView,
-	Platform,
 	View,
-	Button,
+	Pressable,
+	Image,
+	KeyboardAvoidingView,
 } from "react-native";
 import FormContainer from "../components/FormContainer/FormContainer";
-import { useState } from "react";
 import { useCallback, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import { styles } from "./Styles";
+import { AntDesign } from "@expo/vector-icons";
 
 const RegistrationScreen = ({ navigation }) => {
 	const [login, setLogin] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
 
-	const [fileResponse, setFileResponse] = useState([]);
+	const [focused, setFocused] = useState("");
+	const handleFocus = e => {
+		setFocused(e);
+	};
 
+	const [fileResponse, setFileResponse] = useState(null);
 	const handleDocumentSelection = useCallback(async () => {
 		try {
 			const response = await DocumentPicker.getDocumentAsync({
@@ -31,13 +36,38 @@ const RegistrationScreen = ({ navigation }) => {
 	}, []);
 
 	return (
-		<FormContainer>
+		<FormContainer route="register">
 			<View style={styles.container}>
 				<View style={styles.thumb}>
-					<Button
-						title="Вибрати файл"
-						onPress={handleDocumentSelection}
-					/>
+					<Pressable
+						onPress={() => {
+							if (fileResponse) {
+								setFileResponse(null);
+								return;
+							}
+							handleDocumentSelection();
+						}}
+						style={styles.thumbFile}
+					>
+						{fileResponse ? (
+							<AntDesign
+								name="pluscircleo"
+								size={25}
+								color="#bdbdbd"
+								style={{
+									transform: [{ rotate: "45deg" }],
+									backgroundColor: "#fff",
+									borderRadius: 50,
+								}}
+							/>
+						) : (
+							<AntDesign
+								name="pluscircleo"
+								size={25}
+								color="#FF6C00"
+							/>
+						)}
+					</Pressable>
 					{fileResponse && (
 						<Image
 							source={{ uri: fileResponse.uri }}
@@ -45,41 +75,93 @@ const RegistrationScreen = ({ navigation }) => {
 						/>
 					)}
 				</View>
-
-				<Text>Registration Screen</Text>
-				<KeyboardAvoidingView
-					behavior={Platform.OS == "ios" ? "padding" : "height"}
+				<View
+					style={{
+						marginTop: 92,
+						marginBottom: -65,
+					}}
 				>
-					<TextInput
-						style={styles.input}
-						value={login}
-						onChangeText={setLogin}
-						placeholder="Login"
-					/>
+					<Text style={styles.title}>Реєстрація</Text>
+					<KeyboardAvoidingView
+						behavior={Platform.OS == "ios" ? "padding" : "height"}
+						keyboardVerticalOffset={Platform.select({
+							ios: () => -290,
+							android: () => -300,
+						})()}
+					>
+						<TextInput
+							style={
+								focused == "Login"
+									? styles.inputActive
+									: styles.input
+							}
+							value={login}
+							onChangeText={setLogin}
+							placeholder="Login"
+							onFocus={() => handleFocus("Login")}
+							onBlur={() => handleFocus("")}
+						/>
 
-					<TextInput
-						style={styles.input}
-						value={email}
-						onChangeText={setEmail}
-						placeholder="Email"
-					/>
+						<TextInput
+							style={
+								focused == "Email"
+									? styles.inputActive
+									: styles.input
+							}
+							value={email}
+							onChangeText={setEmail}
+							placeholder="Email"
+							onFocus={() => handleFocus("Email")}
+							onBlur={() => handleFocus("")}
+						/>
 
-					<TextInput
-						style={styles.input}
-						value={password}
-						onChangeText={setPassword}
-						placeholder="Password"
-					/>
-				</KeyboardAvoidingView>
-
-				<Button
-					title="Зареєструватися"
-					onPress={() => console.log({ login, email, password })}
-				/>
-				<Button
-					title="Вже є аккаунт?Увійти"
-					onPress={() => navigation.navigate("Login")}
-				/>
+						<View style={styles.inputContainer}>
+							<TextInput
+								style={
+									focused == "Password"
+										? styles.inputActive
+										: styles.input
+								}
+								secureTextEntry={!showPassword}
+								value={password}
+								onChangeText={setPassword}
+								placeholder="Password"
+								onFocus={() => handleFocus("Password")}
+								onBlur={() => handleFocus("")}
+							/>
+							<Pressable
+								onPress={() => setShowPassword(!showPassword)}
+								style={styles.passShower}
+							>
+								<Text style={styles.passShowerText}>
+									Показати
+								</Text>
+							</Pressable>
+						</View>
+					</KeyboardAvoidingView>
+					<Pressable
+						style={styles.buttonPrimary}
+						onPress={() =>
+							console.log({
+								login,
+								email,
+								password,
+							})
+						}
+					>
+						<Text style={styles.buttonPrimaryText}>
+							Зареєструватися
+						</Text>
+					</Pressable>
+					<Pressable
+						style={styles.buttonSecondary}
+						onPress={() => navigation.navigate("Login")}
+					>
+						<Text style={styles.buttonSecondaryText}>
+							Вже є аккаунт? Увійти
+						</Text>
+					</Pressable>
+				</View>
 			</View>
 		</FormContainer>
 	);
