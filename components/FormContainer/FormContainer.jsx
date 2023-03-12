@@ -14,7 +14,7 @@ const FormContainer = ({ children, route }) => {
 			<KeyboardAvoidingView
 				behavior={Platform.OS == "ios" ? "padding" : "height"}
 				keyboardVerticalOffset={Platform.select({
-					ios: () => -290,
+					ios: () => (route === "login" ? -280 : -190),
 					android: () => (route === "login" ? -250 : -190),
 				})()}
 				style={styles.block}

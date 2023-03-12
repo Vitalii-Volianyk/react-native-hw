@@ -3,9 +3,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useState } from "react";
 import AppLoading from "expo-app-loading";
+import * as Font from "expo-font";
 import RegistrationScreen from "./Screens/RegistrationScreen.jsx";
 import LoginScreen from "./Screens/LoginScreen.jsx";
-import * as Font from "expo-font";
 
 const loadFonts = async () => {
 	await Font.loadAsync({
