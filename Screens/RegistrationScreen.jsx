@@ -1,11 +1,4 @@
-import {
-	TextInput,
-	Text,
-	View,
-	Pressable,
-	Image,
-	KeyboardAvoidingView,
-} from "react-native";
+import { TextInput, Text, View, Pressable, Image } from "react-native";
 import FormContainer from "../components/FormContainer/FormContainer";
 import { useCallback, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
@@ -82,63 +75,54 @@ const RegistrationScreen = ({ navigation }) => {
 					}}
 				>
 					<Text style={styles.title}>Реєстрація</Text>
-					<KeyboardAvoidingView
-						behavior={Platform.OS == "ios" ? "padding" : "height"}
-						keyboardVerticalOffset={Platform.select({
-							ios: () => -290,
-							android: () => -300,
-						})()}
-					>
+					<TextInput
+						style={
+							focused == "Login"
+								? styles.inputActive
+								: styles.input
+						}
+						value={login}
+						onChangeText={setLogin}
+						placeholder="Login"
+						onFocus={() => handleFocus("Login")}
+						onBlur={() => handleFocus("")}
+					/>
+
+					<TextInput
+						style={
+							focused == "Email"
+								? styles.inputActive
+								: styles.input
+						}
+						value={email}
+						onChangeText={setEmail}
+						placeholder="Email"
+						onFocus={() => handleFocus("Email")}
+						onBlur={() => handleFocus("")}
+					/>
+
+					<View style={styles.inputContainer}>
 						<TextInput
 							style={
-								focused == "Login"
+								focused == "Password"
 									? styles.inputActive
 									: styles.input
 							}
-							value={login}
-							onChangeText={setLogin}
-							placeholder="Login"
-							onFocus={() => handleFocus("Login")}
+							secureTextEntry={!showPassword}
+							value={password}
+							onChangeText={setPassword}
+							placeholder="Password"
+							onFocus={() => handleFocus("Password")}
 							onBlur={() => handleFocus("")}
 						/>
+						<Pressable
+							onPress={() => setShowPassword(!showPassword)}
+							style={styles.passShower}
+						>
+							<Text style={styles.passShowerText}>{showPassword?"Сховати":"Показати"}</Text>
+						</Pressable>
+					</View>
 
-						<TextInput
-							style={
-								focused == "Email"
-									? styles.inputActive
-									: styles.input
-							}
-							value={email}
-							onChangeText={setEmail}
-							placeholder="Email"
-							onFocus={() => handleFocus("Email")}
-							onBlur={() => handleFocus("")}
-						/>
-
-						<View style={styles.inputContainer}>
-							<TextInput
-								style={
-									focused == "Password"
-										? styles.inputActive
-										: styles.input
-								}
-								secureTextEntry={!showPassword}
-								value={password}
-								onChangeText={setPassword}
-								placeholder="Password"
-								onFocus={() => handleFocus("Password")}
-								onBlur={() => handleFocus("")}
-							/>
-							<Pressable
-								onPress={() => setShowPassword(!showPassword)}
-								style={styles.passShower}
-							>
-								<Text style={styles.passShowerText}>
-									Показати
-								</Text>
-							</Pressable>
-						</View>
-					</KeyboardAvoidingView>
 					<Pressable
 						style={styles.buttonPrimary}
 						onPress={() =>

@@ -1,30 +1,37 @@
 import { StatusBar } from "expo-status-bar";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { useState } from "react";
-import AppLoading from "expo-app-loading";
+import { useEffect, useState } from "react";
+import * as SplashScreen from 'expo-splash-screen';
 import * as Font from "expo-font";
 import RegistrationScreen from "./Screens/RegistrationScreen.jsx";
 import LoginScreen from "./Screens/LoginScreen.jsx";
 
-const loadFonts = async () => {
-	await Font.loadAsync({
-		Roboto: require("./assets/fonts/Roboto/Roboto-Regular.ttf"),
-	});
-};
+SplashScreen.preventAutoHideAsync();
 
 const MainStack = createStackNavigator();
 
 export default function App() {
 	const [isReady, setIsReady] = useState(false);
+
+	useEffect(() => {
+		async function prepare() {
+		  try {
+			await Font.loadAsync({Roboto: require("./assets/fonts/Roboto/Roboto-Regular.ttf")});
+		  } catch (e) {
+			console.warn(e);
+		  } finally {
+			// Tell the application to render
+			setIsReady(true);
+			await SplashScreen.hideAsync();
+		  }
+		}
+		prepare();
+	  }, []);
+
+
 	if (!isReady) {
-		return (
-			<AppLoading
-				startAsync={loadFonts}
-				onFinish={() => setIsReady(true)}
-				onError={console.warn}
-			/>
-		);
+		return null;
 	}
 	return (
 		<>

@@ -1,10 +1,4 @@
-import {
-	TextInput,
-	Text,
-	View,
-	Pressable,
-	KeyboardAvoidingView,
-} from "react-native";
+import { TextInput, Text, View, Pressable } from "react-native";
 import { useState } from "react";
 import { styles } from "./Styles";
 import FormContainer from "../components/FormContainer/FormContainer";
@@ -53,7 +47,7 @@ const LoginScreen = ({ navigation }) => {
 						onPress={() => setShowPassword(!showPassword)}
 						style={styles.passShower}
 					>
-						<Text style={styles.passShowerText}>Показати</Text>
+						<Text style={styles.passShowerText}>{showPassword?"Сховати":"Показати"}</Text>
 					</Pressable>
 				</View>
 
