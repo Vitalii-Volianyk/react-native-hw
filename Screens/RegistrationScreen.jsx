@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import { styles } from "./Styles";
 import { AntDesign } from "@expo/vector-icons";
-
+import { registerUser } from "../service/firebase.js";
 const RegistrationScreen = ({ navigation }) => {
 	const [login, setLogin] = useState("");
 	const [email, setEmail] = useState("");
@@ -119,19 +119,18 @@ const RegistrationScreen = ({ navigation }) => {
 							onPress={() => setShowPassword(!showPassword)}
 							style={styles.passShower}
 						>
-							<Text style={styles.passShowerText}>{showPassword?"Сховати":"Показати"}</Text>
+							<Text style={styles.passShowerText}>
+								{showPassword ? "Сховати" : "Показати"}
+							</Text>
 						</Pressable>
 					</View>
 
 					<Pressable
 						style={styles.buttonPrimary}
-						onPress={() =>
-							console.log({
-								login,
-								email,
-								password,
-							})
-						}
+						onPress={() => {
+							console.log(email, password);
+							registerUser(email, password);
+						}}
 					>
 						<Text style={styles.buttonPrimaryText}>
 							Зареєструватися

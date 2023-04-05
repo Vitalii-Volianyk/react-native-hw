@@ -1,22 +1,34 @@
-import firebase from "firebase";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
-	apiKey: "API_KEY",
-	authDomain: "DOMAIN",
-	databaseURL: "URL",
-	projectId: "PROJECT_ID",
-	storageBucket: "STORAGE",
-	messagingSenderId: "SENDER_ID",
-	appId: "APP_ID",
+	apiKey: "AIzaSyCkrS8awlMnOv3IAdJSEEVo7WKUXHP1xjU",
+	authDomain: "react-native-hw-9fedc.firebaseapp.com",
+	projectId: "react-native-hw-9fedc",
+	storageBucket: "react-native-hw-9fedc.appspot.com",
+	messagingSenderId: "536799521474",
+	appId: "1:536799521474:web:497388294c56baf85be95b",
+	measurementId: "G-NEPBQLM6LS",
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+const auth = getAuth(app);
 
-export { auth, db, storage };
+const registerUser = (email, password) => {
+	createUserWithEmailAndPassword(auth, email, password)
+		.then(userCredential => {
+			// Signed in
+			const user = userCredential.user;
+			console.log(user);
+			// ...
+		})
+		.catch(error => {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			console.log(errorCode, errorMessage);
+			// ..
+		});
+};
+
+export { auth, registerUser };
