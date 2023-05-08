@@ -1,11 +1,12 @@
-import { TextInput, Text, View, Pressable, Image } from "react-native";
+import {TextInput, Text, View, Pressable, Image} from "react-native";
 import FormContainer from "../components/FormContainer/FormContainer";
-import { useCallback, useState } from "react";
+import {useCallback, useState} from "react";
 import * as DocumentPicker from "expo-document-picker";
-import { styles } from "./Styles";
-import { AntDesign } from "@expo/vector-icons";
-import { registerUser } from "../service/firebase.js";
-const RegistrationScreen = ({ navigation }) => {
+import {styles} from "./Styles";
+import {AntDesign} from "@expo/vector-icons";
+import {registerUser} from "../service/firebase.js";
+
+const RegistrationScreen = ({navigation}) => {
 	const [login, setLogin] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -48,7 +49,7 @@ const RegistrationScreen = ({ navigation }) => {
 								size={25}
 								color="#bdbdbd"
 								style={{
-									transform: [{ rotate: "45deg" }],
+									transform: [{rotate: "45deg"}],
 									backgroundColor: "#fff",
 									borderRadius: 50,
 								}}
@@ -63,8 +64,8 @@ const RegistrationScreen = ({ navigation }) => {
 					</Pressable>
 					{fileResponse && (
 						<Image
-							source={{ uri: fileResponse.uri }}
-							style={{ width: 120, height: 120 }}
+							source={{uri: fileResponse.uri}}
+							style={{width: 120, height: 120}}
 						/>
 					)}
 				</View>
@@ -128,8 +129,8 @@ const RegistrationScreen = ({ navigation }) => {
 					<Pressable
 						style={styles.buttonPrimary}
 						onPress={() => {
-							console.log(email, password);
-							registerUser(email, password);
+							console.log(email, password, login);
+							registerUser(email, password, login);
 						}}
 					>
 						<Text style={styles.buttonPrimaryText}>

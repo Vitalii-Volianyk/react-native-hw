@@ -1,3 +1,4 @@
+import {useNavigation} from "@react-navigation/native";
 import {
 	StyleSheet,
 	ImageBackground,
@@ -7,8 +8,14 @@ import {
 	View,
 	Keyboard,
 } from "react-native";
+import {useSelector} from "react-redux";
 
-const FormContainer = ({ children, route }) => {
+const FormContainer = ({children, route}) => {
+	const user = useSelector(state => state.user.user);
+	if (user) {
+		useNavigation().navigate("Home");
+	}
+
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<KeyboardAvoidingView

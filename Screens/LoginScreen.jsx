@@ -1,17 +1,24 @@
-import { TextInput, Text, View, Pressable } from "react-native";
-import { useState } from "react";
-import { styles } from "./Styles";
+import {TextInput, Text, View, Pressable} from "react-native";
+import {useState} from "react";
+import {styles} from "./Styles";
 import FormContainer from "../components/FormContainer/FormContainer";
+import {loginUser} from "../service/firebase.js";
+import {useSelector} from "react-redux";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [focused, setFocused] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const {user} = useSelector(state => state.user);
 
 	const handleFocus = e => {
 		setFocused(e);
 	};
+
+	if (user) {
+		navigation.navigate("Home");
+	}
 	return (
 		<FormContainer route="login">
 			<View style={styles.container}>
@@ -47,13 +54,17 @@ const LoginScreen = ({ navigation }) => {
 						onPress={() => setShowPassword(!showPassword)}
 						style={styles.passShower}
 					>
-						<Text style={styles.passShowerText}>{showPassword?"Сховати":"Показати"}</Text>
+						<Text style={styles.passShowerText}>
+							{showPassword ? "Сховати" : "Показати"}
+						</Text>
 					</Pressable>
 				</View>
 
 				<Pressable
 					style={styles.buttonPrimary}
-					onPress={() => console.log({ email, password })}
+					onPress={() => {
+						loginUser(email, password);
+					}}
 				>
 					<Text style={styles.buttonPrimaryText}>Увійти</Text>
 				</Pressable>
