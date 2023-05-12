@@ -12,4 +12,4 @@ const user = createSlice({
 	},
 });
 export const {setUser} = user.actions;
-export default user.reducer;
+export default userReducer = user.reducer;

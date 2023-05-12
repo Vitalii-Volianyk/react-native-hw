@@ -11,7 +11,7 @@ const LogoTitle = ({text, logout, back}) => {
 			{back && (
 				<Pressable
 					style={styles.button}
-					onPress={() => navigation.navigate("PostsScreen")}
+					onPress={() => navigation.navigate("Home")}
 				>
 					<Ionicons name="ios-arrow-back" size={24} color="black" />
 				</Pressable>
@@ -38,9 +38,12 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		flexDirection: "row",
-		width: "100%",
-		margin: 0,
+		minWidth: "100%",
+		marginHorizontal: -15,
+		paddingHorizontal: 15,
 		paddingVertical: 10,
+		borderBottomColor: "#ccc",
+		borderBottomWidth: 1,
 	},
 	title: {
 		flex: 1,
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	button: {
-		backgroundColor: "#2196F3",
+		padding: 3,
 	},
 });
 

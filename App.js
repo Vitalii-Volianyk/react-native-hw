@@ -9,17 +9,19 @@ import LoginScreen from "./Screens/LoginScreen.jsx";
 import HomeScreen from "./Screens/HomeScreen.jsx";
 import MapScreen from "./Screens/MapScreen.jsx";
 import CommentsScreen from "./Screens/CommentsScreen.jsx";
+import CreatePostsScreen from "./Screens/CreatePostsScreen.jsx";
+import LogoTitle from "./components/LogoTitle.jsx";
 import {store} from "./service/redux/store.js";
-import {useSelector, useDispatch, Provider} from "react-redux";
+import {useDispatch, Provider, useSelector} from "react-redux";
 import {setUser} from "./service/redux/auth/auth.js";
 import {auth} from "./service/firebase.js";
 
 function App() {
 	const [isReady, setIsReady] = useState(false);
-	const user = useSelector(state => state.user.user);
 	SplashScreen.preventAutoHideAsync();
 	const dispatch = useDispatch();
 	const MainStack = createStackNavigator();
+	const {user} = useSelector(state => state.user);
 
 	useEffect(() => {
 		async function prepare() {
@@ -30,8 +32,6 @@ function App() {
 			} catch (e) {
 				console.warn(e);
 			} finally {
-				// Tell the application to render
-				setIsReady(true);
 				await SplashScreen.hideAsync();
 			}
 			await auth.onAuthStateChanged(user => {
@@ -49,55 +49,65 @@ function App() {
 					})
 				);
 			});
+			setIsReady(true);
 		}
 		prepare();
 	}, []);
-	let initialRouteName = "Registration";
-	useEffect(() => {
-		if (user) {
-			initialRouteName = "Home";
-		} else {
-			initialRouteName = "Login";
-		}
-	}, [user]);
 
 	if (!isReady) {
 		return null;
 	}
-	return (
-		<>
-			<StatusBar hidden />
-			<NavigationContainer>
-				<MainStack.Navigator initialRouteName={initialRouteName}>
-					<MainStack.Screen
-						name="Registration"
-						component={RegistrationScreen}
-						options={{headerShown: false}}
-					/>
-					<MainStack.Screen
-						name="Login"
-						component={LoginScreen}
-						options={{headerShown: false}}
-					/>
-					<MainStack.Screen
-						name="Home"
-						component={HomeScreen}
-						options={{headerShown: false}}
-					/>
-					<MainStack.Screen
-						name="MapScreen"
-						component={MapScreen}
-						options={{headerShown: false}}
-					/>
-					<MainStack.Screen
-						name="CommentsScreen"
-						component={CommentsScreen}
-						options={{headerShown: false}}
-					/>
-				</MainStack.Navigator>
-			</NavigationContainer>
-		</>
-	);
+	if (user) {
+		console.log(user);
+		return (
+			<>
+				<StatusBar hidden />
+				<NavigationContainer>
+					<MainStack.Navigator initialRouteName="Home">
+						<MainStack.Screen
+							name="Home"
+							component={HomeScreen}
+							options={{headerShown: false}}
+						/>
+						<MainStack.Screen
+							name="CreatePostsScreen"
+							component={CreatePostsScreen}
+						/>
+						<MainStack.Screen
+							name="MapScreen"
+							component={MapScreen}
+							options={{headerShown: false}}
+						/>
+						<MainStack.Screen
+							name="CommentsScreen"
+							component={CommentsScreen}
+							options={{headerShown: false}}
+						/>
+					</MainStack.Navigator>
+				</NavigationContainer>
+			</>
+		);
+	} else {
+		return (
+			<>
+				<StatusBar hidden />
+				<NavigationContainer>
+					<MainStack.Navigator initialRouteName="Login">
+						<MainStack.Screen
+							name="Registration"
+							component={RegistrationScreen}
+							options={{headerShown: false}}
+						/>
+						<MainStack.Screen
+							name="Login"
+							component={LoginScreen}
+							options={{headerShown: false}}
+						/>
+					</MainStack.Navigator>
+				</NavigationContainer>
+			</>
+		);
+	}
 }
 
 export default () => {

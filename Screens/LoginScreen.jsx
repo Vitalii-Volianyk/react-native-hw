@@ -3,22 +3,16 @@ import {useState} from "react";
 import {styles} from "./Styles";
 import FormContainer from "../components/FormContainer/FormContainer";
 import {loginUser} from "../service/firebase.js";
-import {useSelector} from "react-redux";
 
 const LoginScreen = ({navigation}) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [focused, setFocused] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
-	const {user} = useSelector(state => state.user);
 
 	const handleFocus = e => {
 		setFocused(e);
 	};
-
-	if (user) {
-		navigation.navigate("Home");
-	}
 	return (
 		<FormContainer route="login">
 			<View style={styles.container}>

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
 
 export const styles = StyleSheet.create({
 	container: {
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
 		position: "absolute",
 		top: -60,
 		left: "50%",
-		transform: [{ translateX: -60 }],
+		transform: [{translateX: -60}],
 		borderRadius: 10,
 	},
 	input: {
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
 		lineHeight: 19,
 		color: "#fff",
 	},
-	buttonSecondary: { marginBottom: 140 },
+	buttonSecondary: {marginBottom: 140},
 	buttonSecondaryText: {
 		textAlign: "center",
 		color: "#1B4371",
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
 		right: 32,
 		top: "50%",
 		zIndex: 1,
-		transform: [{ translateX: 0 }, { translateY: -10 }],
+		transform: [{translateX: 0}, {translateY: -10}],
 	},
 	passShowerText: {
 		color: "#1B4371",
