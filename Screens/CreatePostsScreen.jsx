@@ -36,7 +36,7 @@ const CreatePostsScreen = () => {
 			let location = await Location.getCurrentPositionAsync({
 				accuracy: Location.Accuracy.High,
 			});
-			//Geocoder.init("AIzaSyANlmK0szzdLxnJLdztryBDFXXllxyR3Fg");
+			//Geocoder.init("");
 			//let results = await Geocoder.from("Київ");
 			//console.log(results.results[0].geometry.location);
 			const coords = {
