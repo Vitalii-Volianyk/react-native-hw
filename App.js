@@ -53,12 +53,16 @@ function App() {
 		}
 		prepare();
 	}, []);
+	useEffect(() => {
+		if (user) {
+			SplashScreen.hideAsync();
+		}
+	}, [user]);
 
 	if (!isReady) {
 		return null;
 	}
 	if (user) {
-		console.log(user);
 		return (
 			<>
 				<StatusBar hidden />

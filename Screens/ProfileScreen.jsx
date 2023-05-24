@@ -69,7 +69,7 @@ const ProfileScreen = () => {
 						style={styles.image}
 					/>
 					<View style={styles.textcontainer}>
-						<Text style={styles.title}>{user.displayName}</Text>
+						<Text style={styles.title}>{user?.displayName}</Text>
 					</View>
 				</View>
 				<PostItem post={post} />

@@ -2,16 +2,19 @@ import {Pressable, View, Text, StyleSheet} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import {logoutUser} from "../service/firebase";
+import {useDispatch} from "react-redux";
+import {clearUser} from "../service/redux/auth/auth.js";
 
 const LogoTitle = ({text, logout, back}) => {
 	const navigation = useNavigation();
+	const dispatch = useDispatch();
 
 	return (
 		<View style={styles.container}>
 			{back && (
 				<Pressable
 					style={styles.button}
-					onPress={() => navigation.navigate("Home")}
+					onPress={() => navigation.navigate(-1)}
 				>
 					<Ionicons name="ios-arrow-back" size={24} color="black" />
 				</Pressable>
@@ -22,7 +25,6 @@ const LogoTitle = ({text, logout, back}) => {
 					style={styles.button}
 					onPress={async () => {
 						await logoutUser();
-						navigation.navigate("Login");
 					}}
 				>
 					<Ionicons name="log-out-outline" size={24} color="black" />

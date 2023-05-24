@@ -129,7 +129,6 @@ const RegistrationScreen = ({navigation}) => {
 					<Pressable
 						style={styles.buttonPrimary}
 						onPress={() => {
-							console.log(email, password, login);
 							registerUser(email, password, login);
 						}}
 					>

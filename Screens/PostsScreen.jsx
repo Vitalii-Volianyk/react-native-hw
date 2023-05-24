@@ -49,8 +49,8 @@ const PostsScreen = () => {
 						style={styles.image}
 					/>
 					<View style={styles.textcontainer}>
-						<Text style={styles.title}>{user.displayName}</Text>
-						<Text style={styles.subtitle}>{user.email}</Text>
+						<Text style={styles.title}>{user?.displayName}</Text>
+						<Text style={styles.subtitle}>{user?.email}</Text>
 					</View>
 				</View>
 				<PostItem post={post} />

@@ -2,8 +2,12 @@ import {initializeApp} from "firebase/app";
 import {
 	getAuth,
 	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
 	updateProfile,
 } from "firebase/auth";
+import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import store from "./redux/store";
+import {setUser, clearUser} from "./redux/auth/auth";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyCkrS8awlMnOv3IAdJSEEVo7WKUXHP1xjU",
@@ -24,6 +28,7 @@ const registerUser = (email, password, login) => {
 	createUserWithEmailAndPassword(auth, email, password)
 		.then(userCredential => {
 			updatedProfile(login);
+			const user = userCredential.user;
 		})
 		.catch(error => {
 			const errorCode = error.code;
@@ -48,6 +53,7 @@ const loginUser = (email, password) => {
 const logoutUser = async () => {
 	try {
 		await auth.signOut();
+		store.dispatch(clearUser());
 	} catch (error) {
 		throw error;
 	}
@@ -58,29 +64,21 @@ const updatedProfile = displayName => {
 		displayName,
 		photoURL: "https://example.com/jane-q-user/profile.jpg",
 	})
-		.then(() => {
-			console.log("Profile updated!");
+		.then(user => {
+			const {displayName, email, emailVerified, photoURL, uid} =
+				auth.currentUser;
+			store.dispatch(
+				setUser({displayName, email, emailVerified, photoURL, uid})
+			);
 		})
 		.catch(error => {});
 };
 
-const savePhotoToFirebase = image => {
-	// Get a reference to the Firebase storage bucket
-	const storageRef = firebase.storage().ref();
-
-	// Create a new file reference for the image
-	const imageRef = storageRef.child("images/" + image.name);
-
-	// Upload the image to Firebase
-	imageRef.putFile(image).then(snapshot => {
-		// Get the download URL for the image
-		const downloadURL = snapshot.downloadURL;
-
-		// Do something with the download URL
-		console.log(
-			"The image has been uploaded to Firebase. The download URL is: " +
-				downloadURL
-		);
+const savePhotoToFirebase = (image, name) => {
+	const storage = getStorage(app);
+	const storageRef = ref(storage, name);
+	return uploadBytes(storageRef, image).then(snapshot => {
+		return getDownloadURL(snapshot.ref);
 	});
 };
 
@@ -114,4 +112,4 @@ const getPositionName = ({latitude, longitude}) => {
 	);
 };
 
-export {auth, registerUser, loginUser, logoutUser};
+export {auth, registerUser, loginUser, logoutUser, savePhotoToFirebase};

@@ -7,24 +7,29 @@ import {
 	StyleSheet,
 	Pressable,
 	TextInput,
-	TouchableOpacity,
+	TouchableWithoutFeedback,
+	KeyboardAvoidingView,
+	Platform,
+	Keyboard,
+	useWindowDimensions,
 } from "react-native";
+
 import * as Location from "expo-location";
 import {Dimensions} from "react-native";
 import Geocoder from "react-native-geocoding";
 import {Camera} from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
-import {set} from "react-native-reanimated";
+import {savePhotoToFirebase} from "../service/firebase";
 
-const CreatePostsScreen = () => {
+const CreatePostsScreen = ({route}) => {
 	const [image, setImage] = useState(null);
 	const [caption, setCaption] = useState("");
 	const [locationText, setLocationText] = useState("");
 	const [buttonHidden, setButtonHidden] = useState(false);
 	const [hasPermission, setHasPermission] = useState(null);
 	const [cameraRef, setCameraRef] = useState(null);
-
 	const [location, setLocation] = useState(null);
+	const dimensions = useWindowDimensions();
 
 	useEffect(() => {
 		(async () => {
@@ -53,16 +58,16 @@ const CreatePostsScreen = () => {
 		})();
 	}, []);
 
-	const takePicture = () => {
-		navigator.camera
-			.takePicture({
-				quality: 100,
-				targetHeight: 200,
-				targetWidth: 200,
-			})
-			.then(photo => {
-				setImage(photo);
-			});
+	const takePicture = async () => {
+		if (cameraRef) {
+			const img = await cameraRef.takePictureAsync();
+			const image = await MediaLibrary.createAssetAsync(img.uri);
+			const response = await fetch(image.uri);
+			const blob = await response.blob();
+			const url = await savePhotoToFirebase(blob, image.filename);
+			console.log(url);
+			setImage(img);
+		}
 	};
 
 	const onSubmit = () => {
@@ -71,76 +76,91 @@ const CreatePostsScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			{/*  */}
-			<View style={styles.header}>
-				{/* image preview from camera */}
-				{image ? (
-					<Camera
-						style={styles.camera}
-						ref={ref => {
-							setCameraRef(ref);
-						}}
-					></Camera>
-				) : (
-					<Image
-						style={styles.avatar}
-						source={{uri: image?.uri}}
-						resizeMode="cover"
-						onLoad={() => {
-							// Hide the button after the image is loaded
-							setButtonHidden(true);
-						}}
-					/>
-				)}
-				<Pressable
-					style={styles.buttonCam}
-					onPress={async () => {
-						if (cameraRef) {
-							const img = await cameraRef.takePictureAsync();
-							console.log(img.uri);
-							setImage(img);
-							//await MediaLibrary.createAssetAsync(uri);
-						}
-					}}
-					hidden={buttonHidden}
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+				<KeyboardAvoidingView
+					behavior={Platform.OS == "ios" ? "padding" : "height"}
+					keyboardVerticalOffset={Platform.select({
+						ios: () => -(dimensions.height / 2),
+						android: () => -100,
+					})()}
+					style={styles.block}
 				>
-					<Ionicons name="ios-camera" size={24} color="#fff" />
-				</Pressable>
-				<Text style={styles.text}>Додайте фото</Text>
-			</View>
+					<View style={styles.header}>
+						{!image ? (
+							<Camera
+								style={styles.camera}
+								ref={ref => {
+									setCameraRef(ref);
+								}}
+							></Camera>
+						) : (
+							<Image
+								style={styles.avatar}
+								source={{uri: image?.uri}}
+								resizeMode="cover"
+								onLoad={() => {
+									// Hide the button after the image is loaded
+									setButtonHidden(true);
+								}}
+							/>
+						)}
+						<Pressable
+							style={styles.buttonCam}
+							onPress={takePicture}
+							hidden={buttonHidden}
+						>
+							<Ionicons
+								name="ios-camera"
+								size={24}
+								color="#939393"
+							/>
+						</Pressable>
+						<Text style={styles.text}>Додайте фото</Text>
+					</View>
 
-			<View style={styles.inputContainer}>
-				<TextInput
-					style={styles.input}
-					placeholder="Назва..."
-					value={caption}
-					onChangeText={setCaption}
-				/>
-				<View style={styles.inputContainer}>
-					<Ionicons name="location-outline" size={24} color="black" />
-					<TextInput
-						style={styles.input}
-						placeholder="Місцевість..."
-						value={locationText}
-						onChangeText={setLocationText}
-					/>
-				</View>
-			</View>
+					<View style={styles.inputContainer}>
+						<TextInput
+							style={styles.input}
+							placeholder="Назва..."
+							value={caption}
+							onChangeText={setCaption}
+						/>
+						<View style={styles.inputContainer}>
+							<Ionicons
+								name="location-outline"
+								size={24}
+								color="black"
+							/>
+							<TextInput
+								style={styles.input}
+								placeholder="Місцевість..."
+								value={locationText}
+								onChangeText={setLocationText}
+							/>
+						</View>
+					</View>
 
-			<Pressable
-				style={styles.button}
-				disabled={image == null}
-				onPress={onSubmit}
-			>
-				<Text>Опублікувати</Text>
-			</Pressable>
-			<Pressable
-				style={styles.delete}
-				disabled={image == null}
-				onPress={() => setImage(null)}
-			>
-				<Ionicons name="trash-outline" size={24} color="#BDBDBD" />
-			</Pressable>
+					<Pressable
+						style={styles.button}
+						disabled={image == null}
+						onPress={onSubmit}
+					>
+						<Text>Опублікувати</Text>
+					</Pressable>
+
+					<Pressable
+						style={styles.delete}
+						disabled={image == null}
+						onPress={() => setImage(null)}
+					>
+						<Ionicons
+							name="trash-outline"
+							size={24}
+							color="#BDBDBD"
+						/>
+					</Pressable>
+				</KeyboardAvoidingView>
+			</TouchableWithoutFeedback>
 		</View>
 	);
 };
